@@ -6,4 +6,6 @@ output:
     toc: false
 ---
 
-Welcome to my research website.
+Website to evaluate the limitations of current methods to model incomplete orderings.
+
+- [Initial results of playing around with current methods.](toy_play.html)
