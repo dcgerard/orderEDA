@@ -1,5 +1,5 @@
 ---
-title: "toy_play"
+title: "Play Around with the Rankcluster Package"
 author: "David Gerard"
 date: "`r Sys.Date()`"
 output: workflowr::wflow_html
@@ -11,8 +11,10 @@ I try to find some weeknesses in current methods that cluster rankings.
 
 ## Analysis
 
-Some tricky data. My idea is that individuals 1 and 2 are the only thing that distinguish the two groups. So we should cluster people in one group is 1 > 2 and in the other group if 2 > 1. We will leave some groups to have missing values of 1 and 2
+Some tricky data. My idea is that to generate data such that individuals 1 and 2 are the only thing that distinguish the two groups. So we should cluster people in one group if 1 > 2 and in the other group if 2 > 1. We will let some groups to have missing values of 1 and 2
 
+
+The code to generate data is [here](https://raw.githubusercontent.com/dcgerard/orderEDA/master/code/trick_gen.R)
 ```{r}
 source("./code/trick_gen.R")
 nobj <- 8
@@ -22,13 +24,13 @@ dat <- gen_12diff(nobj = nobj, nind = nind, pmiss = pmiss)
 ```
 
 
-```{r, warning=FALSE}
+```{r, warning=FALSE, message=FALSE}
 library(Rankcluster)
 ```
 
 ```{r, eval = FALSE}
 rout <- rankclust(data = dat)
-save(rout, file = "../output/first_rout.RData")
+save(rout, file = "./output/first_rout.RData")
 ```
 
 ```{r}
@@ -44,7 +46,7 @@ rout@K
 So I'll force it to be $K = 2$
 ```{r, eval = FALSE}
 rout2 <- rankclust(data = dat, K = 2)
-save(rout2, file = "../output/second_rout.RData")
+save(rout2, file = "./output/second_rout.RData")
 ```
 
 ```{r}

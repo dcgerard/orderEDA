@@ -13,7 +13,7 @@
 
 <meta name="date" content="2018-12-05" />
 
-<title>toy_play</title>
+<title>Play Around with the Rankcluster Package</title>
 
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -316,7 +316,7 @@ div.section {
 
 
 
-<h1 class="title toc-ignore">toy_play</h1>
+<h1 class="title toc-ignore">Play Around with the Rankcluster Package</h1>
 <h4 class="author"><em>David Gerard</em></h4>
 <h4 class="date"><em>2018-12-05</em></h4>
 
@@ -328,8 +328,7 @@ div.section {
 <ul>
 <li>
 <details>
-<p><summary> <strong style="color:blue;">✔</strong> <strong>R Markdown file:</strong> up-to-date </summary></p>
-<p>Great! Since the R Markdown file has been committed to the Git repository, you know the exact version of the code that produced these results.</p>
+<p><summary> <strong style="color:red;">✖</strong> <strong>R Markdown file:</strong> uncommitted changes </summary> The R Markdown file has unstaged changes. To know which version of the R Markdown file created these results, you’ll want to first commit it to the Git repo. If you’re still working on the analysis, you can ignore this warning. When you’re finished, you can run <code>wflow_publish</code> to commit the R Markdown file and build the HTML.</p>
 </details>
 </li>
 <li>
@@ -383,7 +382,7 @@ function
 </li>
 <li>
 <details>
-<p><summary> <strong style="color:blue;">✔</strong> <strong>Repository version:</strong> <a href="https://github.com/dcgerard/orderEDA/tree/a55fe3bb5feb04ab5b5172f1d11a3614873dc941" target="_blank">a55fe3b</a> </summary></p>
+<p><summary> <strong style="color:blue;">✔</strong> <strong>Repository version:</strong> <a href="https://github.com/dcgerard/orderEDA/tree/f32dbcd398d4b08534c565731ae90e950d244771" target="_blank">f32dbcd</a> </summary></p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility. The version displayed above was the version of the Git repository at the time these results were generated. <br><br> Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
 <pre><code>
 Ignored files:
@@ -392,6 +391,9 @@ Ignored files:
     Ignored:    papers/nejmoa1412098_appendix_2.xls
     Ignored:    papers/ortmann_etal.pdf
     Ignored:    papers/ortmann_etal_supp.pdf
+
+Unstaged changes:
+    Modified:   analysis/toy_play.Rmd
 
 </code></pre>
 Note that any generated files, e.g. HTML, png, CSS, etc., are not included in this status report because it is ok for generated content to have uncommitted changes.
@@ -422,6 +424,23 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td style="text-align:left;">
+html
+</td>
+<td style="text-align:left;">
+<a href="https://cdn.rawgit.com/dcgerard/orderEDA/f32dbcd398d4b08534c565731ae90e950d244771/docs/toy_play.html" target="_blank">f32dbcd</a>
+</td>
+<td style="text-align:left;">
+David Gerard
+</td>
+<td style="text-align:left;">
+2018-12-05
+</td>
+<td style="text-align:left;">
+fixes problem with toy_play
+</td>
+</tr>
 <tr>
 <td style="text-align:left;">
 Rmd
@@ -484,25 +503,23 @@ wflow_git_commit(files = &quot;./docs/*&quot;)
 </div>
 <div id="analysis" class="section level2">
 <h2>Analysis</h2>
-<p>Some tricky data. My idea is that individuals 1 and 2 are the only thing that distinguish the two groups. So we should cluster people in one group is 1 &gt; 2 and in the other group if 2 &gt; 1. We will leave some groups to have missing values of 1 and 2</p>
+<p>Some tricky data. My idea is that to generate data such that individuals 1 and 2 are the only thing that distinguish the two groups. So we should cluster people in one group if 1 &gt; 2 and in the other group if 2 &gt; 1. We will let some groups to have missing values of 1 and 2</p>
+<p>The code to generate data is <a href="https://raw.githubusercontent.com/dcgerard/orderEDA/master/code/trick_gen.R">here</a></p>
 <pre class="r"><code>source(&quot;./code/trick_gen.R&quot;)
 nobj &lt;- 8
 nind &lt;- 500
 pmiss &lt;- 0.1
 dat &lt;- gen_12diff(nobj = nobj, nind = nind, pmiss = pmiss)</code></pre>
 <pre class="r"><code>library(Rankcluster)</code></pre>
-<pre><code>WARNING : Since Rancluster 0.92, the ranks have to be given to the package in the ranking notation (see convertRank function), with the following convention :
-- missing positions are replaced by 0
-- tied are replaced by the lowest position they share</code></pre>
 <pre class="r"><code>rout &lt;- rankclust(data = dat)
-save(rout, file = &quot;../output/first_rout.RData&quot;)</code></pre>
+save(rout, file = &quot;./output/first_rout.RData&quot;)</code></pre>
 <pre class="r"><code>load(&quot;./output/first_rout.Rdata&quot;)</code></pre>
 <p>Only one cluster is estimated.</p>
 <pre class="r"><code>rout@K</code></pre>
 <pre><code>[1] 1</code></pre>
 <p>So I’ll force it to be <span class="math inline">\(K = 2\)</span></p>
 <pre class="r"><code>rout2 &lt;- rankclust(data = dat, K = 2)
-save(rout2, file = &quot;../output/second_rout.RData&quot;)</code></pre>
+save(rout2, file = &quot;./output/second_rout.RData&quot;)</code></pre>
 <pre class="r"><code>load(&quot;./output/second_rout.Rdata&quot;)</code></pre>
 <p>There is some power to distinguish the two groups. Also, most rankings have a high probability of being in one of the two groups, which is weird. We wouldn’t think to see this.</p>
 <pre class="r"><code>library(ggplot2)
