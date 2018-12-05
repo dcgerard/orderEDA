@@ -1,0 +1,75 @@
+---
+title: "toy_play"
+author: "David Gerard"
+date: "`r Sys.Date()`"
+output: workflowr::wflow_html
+---
+
+## Introduction
+
+I try to find some weeknesses in current methods that cluster rankings.
+
+## Analysis
+
+Some tricky data. My idea is that individuals 1 and 2 are the only thing that distinguish the two groups. So we should cluster people in one group is 1 > 2 and in the other group if 2 > 1. We will leave some groups to have missing values of 1 and 2
+
+```{r}
+source("./code/trick_gen.R")
+nobj <- 8
+nind <- 500
+pmiss <- 0.1
+dat <- gen_12diff(nobj = nobj, nind = nind, pmiss = pmiss)
+```
+
+
+```{r, warning=FALSE}
+library(Rankcluster)
+```
+
+```{r, eval = FALSE}
+rout <- rankclust(data = dat)
+save(rout, file = "../output/first_rout.RData")
+```
+
+```{r}
+load("./output/first_rout.Rdata")
+```
+
+
+Only one cluster is estimated.
+```{r}
+rout@K
+```
+
+So I'll force it to be $K = 2$
+```{r, eval = FALSE}
+rout2 <- rankclust(data = dat, K = 2)
+save(rout2, file = "../output/second_rout.RData")
+```
+
+```{r}
+load("./output/second_rout.Rdata")
+```
+
+There is some power to distinguish the two groups. Also, most rankings have a high probability of being in one of the two groups, which is weird. We wouldn't think to see this.
+```{r}
+library(ggplot2)
+prob1 <- rout2@results[[1]]@tik[, 1]
+trueclust <- rep(c(1, 2), each = nind / 2)
+qplot(as.factor(trueclust), prob1, geom = "boxplot") +
+  theme_bw()
+```
+
+Compare to gold standard where we know the grouping criterion. The best we could do is say 40% are in each group, and 20% half probability 1/2 of being in either group.
+
+```{r}
+sum(dat[, 1] > dat[, 2], na.rm = TRUE) / nrow(dat)
+sum(dat[, 2] > dat[, 1], na.rm = TRUE) / nrow(dat)
+sum(is.na(dat[, 2]) | is.na(dat[, 1])) / nrow(dat)
+```
+
+
+
+
+
+
