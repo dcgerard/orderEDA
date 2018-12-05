@@ -1,5 +1,3 @@
 # orderEDA
 
-A [workflowr][] project.
-
-[workflowr]: https://github.com/jdblischak/workflowr
+Website: https://dcgerard.github.io/orderEDA/
